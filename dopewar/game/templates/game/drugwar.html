@@ -1,0 +1,11 @@
+<p>
+    player = {{player_name}} <br>
+    cash = {{cash}}
+    <div class="row form-group">
+        <form method="post" action="/game/morecash/">
+        {% csrf_token %}
+        <input type="hidden" value="{{player_name}}">
+        <input type="submit" value="+$1000" class="btn btn-primary">
+        </form>
+    </div>
+</p>

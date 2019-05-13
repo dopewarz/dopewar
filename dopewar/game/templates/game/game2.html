@@ -1,0 +1,343 @@
+<html>
+<title>Dopewars</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+textarea { display: none; }
+</style>
+<body class="w3-light-grey">
+
+{% if not action %}
+    New game.
+    <div class="row form-group">
+        <form method="post" action="/game/game2/">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="newgame">
+        <input type="text" name="name" value="Enter your name...">
+        <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
+{% elif action == "home" %}
+    Home screen.
+    <ul>
+        <li>State = {{ state }}.</li>
+        <li>Playerstats = {{ active_player.cash }}</li>
+        <li>Price = {{ coke }}</li>
+    </ul>
+    <div class="row form-group">
+        <form method="post" action="/game/game2/">
+        {% csrf_token %}
+
+        <textarea name="state">{{state_str}}</textarea>
+        <label for="amount">Unit: </label><input type="text" name="amount" value="">
+        <input type="hidden" name="action" value="change_unit">
+        <input type="submit" name="submit" value="Subtract unit" class="btn btn-primary">
+        <input type="submit" name="submit" value="Add unit" class="btn btn-primary">
+
+        </form>
+    </div>
+
+    <div class="row form-group">
+        <form method="post" action="/game/game2/">
+        {% csrf_token %}
+
+        <textarea name="state">{{state_str}}</textarea>
+        <label for="amount">Amount: </label><input type="text" name="amount" value="">
+        <input type="hidden" name="action" value="change_balance">
+        <input type="submit" name="submit" value="Subtract money" class="btn btn-primary">
+        <input type="submit" name="submit" value="Add money" class="btn btn-primary">
+
+        </form>
+    </div>
+
+
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+
+    <!-- Left Column -->
+    <div class="w3-third">
+
+      <div class="w3-white w3-text-grey w3-card-4">
+        <div class="w3-display-container">
+          <div class="w3-display-bottomleft w3-container w3-text-black">
+          </div>
+        </div>
+        <div class="w3-container">
+          <h2>{{ state.name }}</h2>
+          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Cash = ${{ state.balance }} (debt = $XXX)</p>
+          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>{{ state.house }}</p>
+          <p><i class="fa fa-heart fa-fw w3-margin-right w3-large w3-text-teal"></i>{{ state.health }}%</p>
+          <p><i class="fa fa-bed fa-fw w3-margin-right w3-large w3-text-teal"></i>{{ state.country }}</p>
+          <hr>
+          <p class="w3-large"><b><i class="fa fa-line-chart fa-fw w3-margin-right w3-text-teal"></i>Next Day</b></p>
+          <p><i class="fa fa-plane fa-fw w3-margin-right w3-large w3-text-teal"></i>Fly Away</p>
+          <p><i class="fa fa-clock-o fa-fw w3-margin-right w3-large w3-text-teal"></i>Next Day</p>
+          <hr>
+          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Inventory (10/{{ state.inventory_space }})</b></p>
+          {% if state.inventory.btc %}
+            <p>COKE = {{ state.inventory.btc }}</p>
+          {% endif %}
+          {% if state.inventory.coke %}
+            <p>MDMA = {{ state.inventory.coke }}</p>
+          {% endif %}
+          {% if state.inventory.meth %}
+            <p>MDMA = {{ state.inventory.meth }}</p>
+          {% endif %}
+          {% if state.inventory.acid %}
+            <p>MDMA = {{ state.inventory.acid }}</p>
+          {% endif %}
+          {% if state.inventory.pcp %}
+            <p>MDMA = {{ state.inventory.pcp }}</p>
+          {% endif %}
+          {% if state.inventory.hash %}
+            <p>MDMA = {{ state.inventory.hash }}</p>
+          {% endif %}
+          {% if state.inventory.lude %}
+            <p>MDMA = {{ state.inventory.lude }}</p>
+          {% endif %}
+          <hr>
+
+          <p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Other</b></p>
+          <p>Shipping</p>
+          <p><a href="#store" id="storeLink">Store</a></p>
+          <p><a href="#bank" id="bankLink">Bank</a></p>
+          <p><a href="#market" id="marketLink">Market</a></p>
+          <p>Hospital</p>
+          <p><a href="#realestate" id="realestateLink">Real Estate</a></p>
+          <p><a href="#worldprice" id="worldpriceLink">International Prices</a></p>
+
+          <br>
+        </div>
+      </div><br>
+
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="w3-twothird">
+
+      <div class="w3-container w3-card w3-white w3-margin-bottom">
+        <h2 class="w3-text-grey w3-padding-16">NewsFeed</h2>
+        <div class="w3-container">
+          <p>Bitcoin had a huge Surge!!</p>
+          <hr>
+            <p>Bitcoin had a huge Surge!!</p>
+        </div>
+      </div>
+
+      <div class="w3-container w3-card w3-white" id="marketContainer">
+        <h2 class="w3-text-grey w3-padding-16">Market</h2>
+        <div class="w3-container">
+         <table style="width:100%">
+          <tr>
+            <th>Drug</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Buy</th>
+            <th>Sell</th>
+          </tr>
+          <tr>
+            <th>----</th>
+            <th>----</th>
+            <th>----</th>
+            <th>----</th>
+            <th>----</th>
+          </tr>
+
+          {% for drug in reigon_drugs %}
+          <tr>
+            <td>{{ drug.name }}</td>
+            <td>{{ drug.price }}</td>
+            <td><label for="amount">Units: </label><input type="text" name="amount" value=""><input type="hidden" name="action" value="change_unit"></td>
+            <td><input type="submit" name="submit" value="Buy" class="btn btn-primary"></td>
+            <td><input type="submit" name="submit" value="Sell" class="btn btn-primary"></td>
+          {% endfor %}
+          </tr>
+        </table>
+        </div>
+      </div>
+
+
+      <div class="w3-container w3-card w3-white" id="bankContainer" style="display: none;">
+        <h2 class="w3-text-grey w3-padding-16">Bank</h2>
+        <div class="w3-container">
+         <table style="width:100%">
+          <tr>
+            <th></th>
+            <th>Amount</th>
+            <th>Amount</th>
+            <th>Buy</th>
+            <th>Sell</th>
+          </tr>
+          <tr>
+            <td>Bank</td>
+            <td>2200</td>
+            <td><label for="amount">Units: </label><input type="text" name="amount" value=""><input type="hidden" name="action" value="change_unit"></td>
+            <td><input type="submit" name="submit" value="Subtract unit" class="btn btn-primary"></td>
+            <td><input type="submit" name="submit" value="Add unit" class="btn btn-primary"></td>
+          </tr>
+          <tr>
+            <td>Debt</td>
+            <td>6000</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>----</td>
+            <td>----</td>
+            <td>----</td>
+            <td>----</td>
+            <td>----</td>
+          </tr>
+          <tr>
+            <td><b>Loan Sharks</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+             <tr>
+            <td>Parker</td>
+            <td>5000</td>
+                             <td><label for="amount">Loan Amount: </label><input type="text" name="amount" value=""><input type="hidden" name="action" value="change_unit"></td>
+            <td><input type="submit" name="submit" value="Take Loan" class="btn btn-primary"></td>
+            <td><input type="submit" name="submit" value="Pay Loan" class="btn btn-primary"></td>
+          </tr>
+        </table>
+        </div>
+      </div>
+
+      <div class="w3-container w3-card w3-white" id="storeContainer" style="display: none;">
+        <h2 class="w3-text-grey w3-padding-16">Store</h2>
+        <div class="w3-container">
+         <table style="width:100%">
+          <tr>
+            <th>Item</th>
+            <th>cost</th>
+            <th>description</th>
+          </tr>
+        </table>
+        </div>
+      </div>
+
+      <div class="w3-container w3-card w3-white" id="worldpriceContainer" style="display: none;">
+        <h2 class="w3-text-grey w3-padding-16">Internation Prices</h2>
+        <div class="w3-container">
+         <table style="width:100%">
+          <tr>
+            <th>Location</th>
+            <th>Drug</th>
+            <th>Price</th>
+          </tr>
+          <tr>
+            <th>----</th>
+            <th>----</th>
+            <th>----</th>
+          </tr>
+          {% for drug in all_drugs %}
+          <tr>
+            <td>{{ drug.country }}</td>
+            <td>{{ drug.name }}</td>
+            <td>{{ drug.price }}</td>
+          {% endfor %}
+          </tr>
+        </table>
+        </div>
+      </div>
+
+      <div class="w3-container w3-card w3-white" id="realestateContainer" style="display: none;">
+        <h2 class="w3-text-grey w3-padding-16">Internation Prices</h2>
+        <div class="w3-container">
+         <table style="width:100%">
+          <tr>
+            <th>Accomodation</th>
+            <th>Price</th>
+            <th>Buy/Sell</th>
+          </tr>
+          <tr>
+            <th>----</th>
+            <th>----</th>
+          </tr>
+          {% for sale in realestate %}
+          <tr>
+            <td>{{ sale.name }}</td>
+            <td>{{ sale.price }}</td>
+            <td>Buy Or Sell</td>
+          {% endfor %}
+          </tr>
+        </table>
+        </div>
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+
+  <!-- End Grid -->
+  </div>
+
+  <!-- End Page Container -->
+</div>
+
+<footer class="w3-container w3-teal w3-center w3-margin-top">
+  <p>Find me on social media.</p>
+  <i class="fa fa-facebook-official w3-hover-opacity"></i>
+  <i class="fa fa-instagram w3-hover-opacity"></i>
+  <i class="fa fa-snapchat w3-hover-opacity"></i>
+  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+  <i class="fa fa-twitter w3-hover-opacity"></i>
+  <i class="fa fa-linkedin w3-hover-opacity"></i>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#bankLink").click(function() {
+        $("#bankContainer").show('fast');
+        $("#marketContainer").hide();
+        $("#storeContainer").hide();
+        $("#worldpriceContainer").hide();
+        $("#realestateContainer").hide();
+    });
+    $("#marketLink").click(function() {
+        $("#marketContainer").show('fast');
+        $("#bankContainer").hide();
+        $("#storeContainer").hide();
+        $("#worldpriceContainer").hide();
+        $("#realestateContainer").hide();
+    });
+    $("#storeLink").click(function() {
+        $("#storeContainer").show('fast');
+        $("#marketContainer").hide();
+        $("#bankContainer").hide();
+        $("#worldpriceContainer").hide();
+        $("#realestateContainer").hide();
+    });
+    $("#worldpriceLink").click(function() {
+        $("#worldpriceContainer").show('fast');
+        $("#marketContainer").hide();
+        $("#bankContainer").hide();
+        $("#storeContainer").hide();
+        $("#realestateContainer").hide();
+    });
+    $("#realestateLink").click(function() {
+        $("#realestateContainer").show('fast');
+        $("#bankContainer").hide();
+        $("#storeContainer").hide();
+        $("#worldpriceContainer").hide();
+        $("#marketContainer").hide();
+    });
+});
+</script>
+
+</body>
+</html>
+{% endif %}
