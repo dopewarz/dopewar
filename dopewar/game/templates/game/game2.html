@@ -170,22 +170,21 @@ textarea { display: none; }
             <th>----</th>
             <th>----</th>
             <th>----</th>
-            <th>{{ reigon_drugs}}</th>
+            <th>----</th>
           </tr>
           {% for drug in reigon_drugs %}
           <tr>
-                <div class="row form-group">
-                    <form method="post" action="/game/game2/">
-                    {% csrf_token %}
-
-                    <th><textarea name="state">{{drug.name}}</textarea></th>
-                    <th><label for="amount">Unit: </label><input type="text" name="amount" value=""></th>
-                    <input type="hidden" name="action" value="change_coke">
-                    <th><input type="submit" name="submit" value="Subtract unit" class="btn btn-primary"></th>
-                    <th><input type="submit" name="submit" value="Add unit" class="btn btn-primary"></th>
-
-                    </form>
-                </div>
+                <form method="post" action="/game/game2/">
+                {% csrf_token %}
+                    <td>{{drug.name}}</td>
+                    <td>{{drug.price}}</td>
+                    <td><label for="amount">Unit: </label><input type="text" name="amount" value=""></td>
+                    <td><input type="submit" name="submit" value="Add unit" class="btn btn-primary"></td>
+                    <td><input type="submit" name="submit" value="Subtract unit" class="btn btn-primary"></td>
+                    <input type="hidden" name="action" value="change_unit">
+                    <input type="hidden" name="drug_id" value="{{drug.id}}">
+                    <textarea name="state">{{state_str}}</textarea>
+                </form>
             </tr>
             {% endfor %}
         </table>
