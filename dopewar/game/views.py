@@ -21,11 +21,23 @@ def game2(request):
     if not action:
         return render(request, 'game/game2.html', {'coke': coke, 'active_player': active_player} )
     elif action == "newgame":
-        state = {"name": request.POST['name'], "balance": active_player.cash,
-                 "inventory": {}, "house": active_player.house, "health":active_player.health,
-                 "country": str(active_player.country), "inventory_space": inventory_space}
-        return render(request, 'game/game2.html', {'action': 'home', 'coke': coke,'all_drugs': all_drugs,'reigon_drugs': reigon_drugs, 'state': state, 'state_str': json.dumps(state), 'active_player':active_player, "realestate":realestate} )
-    elif action == "change_unit":
+        state = {"name": request.POST['name'],
+                 "balance": active_player.cash,
+                 "debt": active_player.debt,
+                 "inventory": {},
+                 "house": active_player.house,
+                 "health":active_player.health,
+                 "country": str(active_player.country),
+                 "inventory_space": inventory_space}
+        return render(request, 'game/game2.html', {'action': 'home',
+                                                   'coke': coke,
+                                                   'all_drugs': all_drugs,
+                                                   'state': state,
+                                                   'state_str': json.dumps(state),
+                                                   'reigon_drugs': reigon_drugs,
+                                                   'active_player':active_player,
+                                                   "realestate":realestate} )
+    elif action == "change_coke":
         state = json.loads(request.POST['state'])
         units = int(request.POST['amount'])
         total_price = units * coke
@@ -47,7 +59,11 @@ def game2(request):
             sign = -1
         state = json.loads(request.POST['state'])
         state['balance'] += sign * int(request.POST['amount'])
-        return render(request, 'game/game2.html', {'action': 'home', 'coke': coke, 'state': state, 'state_str': json.dumps(state), 'active_player':active_player})
+        return render(request, 'game/game2.html', {'action': 'home',
+                                                   'coke': coke,
+                                                   'state': state,
+                                                   'state_str': json.dumps(state),
+                                                   'active_player':active_player})
     else:
         raise RuntimeError("Weird state.")
 

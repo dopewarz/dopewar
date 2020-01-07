@@ -72,7 +72,7 @@ textarea { display: none; }
         </div>
         <div class="w3-container">
           <h2>{{ state.name }}</h2>
-          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Cash = ${{ state.balance }} (debt = $XXX)</p>
+          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i><a href="#finance" id="financeLink">Finances: ${{ state.balance }} (debt = $XXX)</a>
           <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>{{ state.house }}</p>
           <p><i class="fa fa-heart fa-fw w3-margin-right w3-large w3-text-teal"></i>{{ state.health }}%</p>
           <p><i class="fa fa-bed fa-fw w3-margin-right w3-large w3-text-teal"></i>{{ state.country }}</p>
@@ -86,7 +86,7 @@ textarea { display: none; }
             <p>COKE = {{ state.inventory.btc }}</p>
           {% endif %}
           {% if state.inventory.coke %}
-            <p>MDMA = {{ state.inventory.coke }}</p>
+            <p>COKE = {{ state.inventory.coke }}</p>
           {% endif %}
           {% if state.inventory.meth %}
             <p>MDMA = {{ state.inventory.meth }}</p>
@@ -133,6 +133,27 @@ textarea { display: none; }
         </div>
       </div>
 
+
+<div class="w3-container w3-card w3-white" id="financeContainer">
+        <h2 class="w3-text-grey w3-padding-16">Finance</h2>
+        <div class="w3-container">
+         <table style="width:100%">
+          <tr>
+            <th>Current Account:</th>
+            <th>{{ state.balance }}</th>
+          </tr>
+          <tr>
+            <th>Current debt</th>
+            <th>{{ state.debt }}</th>
+          </tr>
+          <tr>
+            <th>Current Expenses</th>
+            <th>0000</th>
+          </tr>
+        </table>
+        </div>
+      </div>
+
       <div class="w3-container w3-card w3-white" id="marketContainer">
         <h2 class="w3-text-grey w3-padding-16">Market</h2>
         <div class="w3-container">
@@ -149,18 +170,24 @@ textarea { display: none; }
             <th>----</th>
             <th>----</th>
             <th>----</th>
-            <th>----</th>
+            <th>{{ reigon_drugs}}</th>
           </tr>
-
           {% for drug in reigon_drugs %}
           <tr>
-            <td>{{ drug.name }}</td>
-            <td>{{ drug.price }}</td>
-            <td><label for="amount">Units: </label><input type="text" name="amount" value=""><input type="hidden" name="action" value="change_unit"></td>
-            <td><input type="submit" name="submit" value="Buy" class="btn btn-primary"></td>
-            <td><input type="submit" name="submit" value="Sell" class="btn btn-primary"></td>
-          {% endfor %}
-          </tr>
+                <div class="row form-group">
+                    <form method="post" action="/game/game2/">
+                    {% csrf_token %}
+
+                    <th><textarea name="state">{{drug.name}}</textarea></th>
+                    <th><label for="amount">Unit: </label><input type="text" name="amount" value=""></th>
+                    <input type="hidden" name="action" value="change_coke">
+                    <th><input type="submit" name="submit" value="Subtract unit" class="btn btn-primary"></th>
+                    <th><input type="submit" name="submit" value="Add unit" class="btn btn-primary"></th>
+
+                    </form>
+                </div>
+            </tr>
+            {% endfor %}
         </table>
         </div>
       </div>
@@ -300,12 +327,23 @@ textarea { display: none; }
 
 <script type="text/javascript">
 $(document).ready(function() {
+
+
+     $("#financeLink").click(function() {
+        $("#financeContainer").show('fast');
+        $("#bankContainer").hide();
+        $("#storeContainer").hide();
+        $("#worldpriceContainer").hide();
+        $("#realestateContainer").hide();
+        $("#marketContainer").hide();
+    });
     $("#bankLink").click(function() {
         $("#bankContainer").show('fast');
         $("#marketContainer").hide();
         $("#storeContainer").hide();
         $("#worldpriceContainer").hide();
         $("#realestateContainer").hide();
+        $("#financeContainer").hide();
     });
     $("#marketLink").click(function() {
         $("#marketContainer").show('fast');
@@ -313,6 +351,7 @@ $(document).ready(function() {
         $("#storeContainer").hide();
         $("#worldpriceContainer").hide();
         $("#realestateContainer").hide();
+        $("#financeContainer").hide();
     });
     $("#storeLink").click(function() {
         $("#storeContainer").show('fast');
@@ -320,6 +359,8 @@ $(document).ready(function() {
         $("#bankContainer").hide();
         $("#worldpriceContainer").hide();
         $("#realestateContainer").hide();
+        $("#financeContainer").hide();
+
     });
     $("#worldpriceLink").click(function() {
         $("#worldpriceContainer").show('fast');
@@ -327,6 +368,7 @@ $(document).ready(function() {
         $("#bankContainer").hide();
         $("#storeContainer").hide();
         $("#realestateContainer").hide();
+        $("#financeContainer").hide();
     });
     $("#realestateLink").click(function() {
         $("#realestateContainer").show('fast');
@@ -334,6 +376,7 @@ $(document).ready(function() {
         $("#storeContainer").hide();
         $("#worldpriceContainer").hide();
         $("#marketContainer").hide();
+        $("#financeContainer").hide();
     });
 });
 </script>
